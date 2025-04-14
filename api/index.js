@@ -17,8 +17,7 @@ app.use(express.json());
 
 app.use("/api/v1", testeRouter);
 
-const PORT = 5000;
-const MODE = "development";
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT} in ${MODE} mode.`);
+  console.log(`Server started on port ${PORT}`);
 });
