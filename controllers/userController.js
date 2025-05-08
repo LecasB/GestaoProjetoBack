@@ -3,10 +3,18 @@ import User from "../models/User";
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, descricao } = req.body;
-    const image = {
-      data: req.file.buffer,
-      contentType: req.file.mimetype,
-    };
+
+    image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
+
+    if (!username || !email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Campos obrigatórios não preenchidos" });
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ error: "Email inválido" });
+    }
 
     const user = new User({ username, email, password, descricao, image });
     await user.save();
@@ -20,6 +28,16 @@ exports.createUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "User e password têm de vir preenchidos" });
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ error: "Email inválido" });
+    }
 
     const user = await User.findOne({ email });
 
@@ -35,7 +53,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email },
       "seu_segredo_super_secreto", // chave secreta (idealmente do .env)
-      { expiresIn: "1h" } // validade do token
+      { expiresIn: "7d" } // validade do token
     );
 
     res.status(200).json({ token });
