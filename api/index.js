@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 const isLocalhost = process.env.NODE_ENV === "development";
 
 // Define o nome do banco de dados com base no ambiente
-const dbName = isLocalhost ? "test" : "xou_db";
+const dbName = isLocalhost ? "test" : "xuo_db";
 
 // Monta a URI final com o nome do banco
 const mongoUriWithDb = `${process.env.MONGO_URI}/${dbName}`;
