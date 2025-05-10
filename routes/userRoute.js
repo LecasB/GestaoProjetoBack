@@ -28,6 +28,8 @@ const router = express.Router();
  *               descricao:
  *                 type: string
  *                 example: Sou um novo usuário.
+ *               image:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso
