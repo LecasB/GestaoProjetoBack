@@ -54,7 +54,10 @@ app.use("/api/v1", userRouter);
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
+  const envInfo = isLocalhost
+    ? `http://localhost:${PORT}`
+    : `ambiente de produção (porta ${PORT})`;
+  console.log(`🚀 Servidor a correr em ${envInfo}`);
 });
 
 export default app;
