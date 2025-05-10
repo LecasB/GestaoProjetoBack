@@ -33,7 +33,7 @@ mongoose
   .catch((err) => console.error("🔴 Erro:", err));
 
 const corsOptions = {
-  origin: "http://localhost:3000", // ou '*' em dev
+  origin: isLocalhost ? "http://localhost:3000" : "*", // ou '*' em dev
   methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
