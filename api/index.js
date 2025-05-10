@@ -33,7 +33,7 @@ mongoose
   .catch((err) => console.error("🔴 Erro:", err));
 
 const corsOptions = {
-  origin: "http://localhost:3000", // ou '*' em dev
+  origin: isLocalhost ? "http://localhost:3000" : "*", // ou '*' em dev
   methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -54,7 +54,10 @@ app.use("/api/v1", userRouter);
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
+  const envInfo = isLocalhost
+    ? `http://localhost:${PORT}`
+    : `ambiente de produção (porta ${PORT})`;
+  console.log(`🚀 Servidor a correr em ${envInfo}`);
 });
 
 export default app;
