@@ -52,12 +52,14 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Rotas
 app.use("/api/v1", userRouter);
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  const envInfo = isLocalhost
-    ? `http://localhost:${PORT}`
-    : `ambiente de produção (porta ${PORT})`;
-  console.log(`🚀 Servidor a correr em ${envInfo}`);
-});
+if (process.env.NODE_ENV === "development") {
+  // Iniciar servidor
+  app.listen(PORT, () => {
+    const envInfo = isLocalhost
+      ? `http://localhost:${PORT}`
+      : `ambiente de produção (porta ${PORT})`;
+    console.log(`🚀 Servidor a correr em ${envInfo}`);
+  });
+}
 
 export default app;
