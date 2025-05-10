@@ -1,7 +1,6 @@
 import express from "express";
+import userController from "../controllers/userController.js";
 const router = express.Router();
-const userController = require("../controllers/userController");
-const upload = require("../middlewares/uploadMiddleware");
 
 /**
  * @swagger
@@ -13,7 +12,7 @@ const upload = require("../middlewares/uploadMiddleware");
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -29,16 +28,13 @@ const upload = require("../middlewares/uploadMiddleware");
  *               descricao:
  *                 type: string
  *                 example: Sou um novo usuário.
- *               image:
- *                 type: string
- *                 format: url
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso
  *       400:
  *         description: Erro ao criar usuário
  */
-router.post("/signup", upload.single("image"), userController.createUser);
+router.post("/signup", userController.createUser);
 
 /**
  * @swagger
@@ -80,4 +76,4 @@ router.post("/signup", upload.single("image"), userController.createUser);
  */
 router.post("/login", userController.loginUser);
 
-module.exports = router;
+export default router;

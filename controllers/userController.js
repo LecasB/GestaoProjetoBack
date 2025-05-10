@@ -1,15 +1,25 @@
-import User from "../models/User";
+import validator from "validator";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-exports.createUser = async (req, res) => {
+const createUser = async (req, res) => {
   try {
     const { username, email, password, descricao } = req.body;
 
-    image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
+    const image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
 
     if (!username || !email || !password) {
-      return res
-        .status(400)
-        .json({ error: "Campos obrigatórios não preenchidos" });
+      let camposNaoPreenchidos = [];
+
+      if (!username) camposNaoPreenchidos.push("username");
+      if (!email) camposNaoPreenchidos.push("email");
+      if (!password) camposNaoPreenchidos.push("password");
+
+      return res.status(400).json({
+        error:
+          "Campos obrigatórios não preenchidos:  " +
+          camposNaoPreenchidos.join(", "),
+      });
     }
 
     if (!validator.isEmail(email)) {
@@ -25,7 +35,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-exports.loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -49,15 +59,19 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ error: "Senha incorreta" });
     }
 
-    // Gerar token JWT
     const token = jwt.sign(
       { id: user._id, email: user.email },
-      "seu_segredo_super_secreto", // chave secreta (idealmente do .env)
-      { expiresIn: "7d" } // validade do token
+      "seu_segredo_super_secreto",
+      { expiresIn: "7d" }
     );
 
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+export default {
+  createUser,
+  loginUser,
 };
