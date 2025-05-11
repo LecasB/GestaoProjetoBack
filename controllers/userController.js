@@ -6,6 +6,8 @@ const createUser = async (req, res) => {
   try {
     const { username, email, password, descricao, image } = req.body;
 
+    image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
+
     if (!username || !email || !password) {
       let camposNaoPreenchidos = [];
 
