@@ -6,6 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { swaggerSpec, swaggerUi } from "../utils/swagger.js";
 import userRouter from "../routes/userRoute.js";
+import messageRouter from "../routes/messageRoute.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,6 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", userRouter);
+app.use("/api/v1", messageRouter);
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
