@@ -47,6 +47,12 @@ app.options("*", cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static(path.join("public")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join("public", "index.html"));
+});
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", userRouter);
 app.use("/api/v1", messageRouter);

@@ -61,7 +61,7 @@
       }
     },
     "/api/v1/getMessages": {
-      "get": {
+      "post": {
         "tags": [
           "Mensagens"
         ],

@@ -48,7 +48,7 @@ router.post("/newMessage", MessageController.createMessage);
 /**
  * @swagger
  * /api/v1/getMessages:
- *   get:
+ *   post:
  *     tags:
  *       - Mensagens
  *     summary: Obter mensagens entre dois utilizadores
