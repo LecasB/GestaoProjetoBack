@@ -34,8 +34,8 @@ mongoose
   .catch((err) => console.error("🔴 Erro:", err));
 
 const corsOptions = {
-  origin: isLocalhost ? "http://localhost:3000" : "*",
-  methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
+  origin: isLocalhost ? "http://localhost:3000" : true,
+  methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "HEAD", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
@@ -49,10 +49,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", userRouter);
 
-if (isLocalhost) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
+});
 
 export default app;
