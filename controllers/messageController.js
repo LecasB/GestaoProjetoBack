@@ -1,5 +1,6 @@
 import Message from "../models/Message.js";
 import User from "../models/User.js";
+import io from "../api/index.js"; // Import the socket.io instance
 
 const createMessage = async (req, res) => {
   try {
@@ -20,6 +21,9 @@ const createMessage = async (req, res) => {
 
     const newMessage = new Message({ idsender, idreceiver, message, date });
     await newMessage.save();
+
+    // Emit new message to all connected clients
+    io.emit("newMessage", newMessage); // Emit the 'newMessage' event with the message data
 
     res.status(201).json(newMessage);
   } catch (error) {

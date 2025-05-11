@@ -7,6 +7,8 @@ import { fileURLToPath } from "url";
 import { swaggerSpec, swaggerUi } from "../utils/swagger.js";
 import userRouter from "../routes/userRoute.js";
 import messageRouter from "../routes/messageRoute.js";
+import { createServer } from "http";
+import { Server as SocketIOServer } from "socket.io"; // Ensure Socket.IO is imported correctly
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,7 +19,19 @@ const PORT = process.env.PORT || 3000;
 
 const isLocalhost = process.env.NODE_ENV === "development";
 
-// Monta a URI correta dependendo do ambiente
+// Create the HTTP server to run with Express
+const server = createServer(app);
+
+// Initialize the Socket.IO server using the existing server
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+export const socket = io; // Export socket.io instance for usage
+
 const mongoUriWithDb = isLocalhost
   ? `${process.env.MONGO_URI}/test`
   : process.env.MONGO_URI;
@@ -57,8 +71,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", userRouter);
 app.use("/api/v1", messageRouter);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
+// Listen on the HTTP server
+server.listen(PORT, () => {
+  console.log(`🚀 Servidor Express a correr em http://localhost:${PORT}`);
 });
 
 export default app;
