@@ -53,28 +53,25 @@ router.post("/newMessage", MessageController.createMessage);
  *       - Mensagens
  *     summary: Obter mensagens entre dois utilizadores
  *     description: Retorna todas as mensagens trocadas entre dois utilizadores.
- *     parameters:
- *       - in: query
- *         name: idsender
- *         required: true
- *         schema:
- *           type: string
- *         example: "user123"
- *       - in: query
- *         name: idreceiver
- *         required: true
- *         schema:
- *           type: string
- *         example: "user456"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idsender
+ *               - idreceiver
+ *             properties:
+ *               idsender:
+ *                 type: string
+ *                 example: "user123"
+ *               idreceiver:
+ *                 type: string
+ *                 example: "user456"
  *     responses:
  *       200:
  *         description: Lista de mensagens
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Message'
  *       400:
  *         description: Parâmetros ausentes
  *       500:

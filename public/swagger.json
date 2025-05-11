@@ -8,9 +8,7 @@
   "paths": {
     "/api/v1/newMessage": {
       "post": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Enviar uma nova mensagem",
         "description": "Cria uma nova mensagem entre dois utilizadores.",
         "requestBody": {
@@ -19,12 +17,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "idsender",
-                  "idreceiver",
-                  "date",
-                  "message"
-                ],
+                "required": ["idsender", "idreceiver", "date", "message"],
                 "properties": {
                   "idsender": {
                     "type": "string",
@@ -62,44 +55,33 @@
     },
     "/api/v1/getMessages": {
       "post": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Obter mensagens entre dois utilizadores",
         "description": "Retorna todas as mensagens trocadas entre dois utilizadores.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "idsender",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "user123"
-          },
-          {
-            "in": "query",
-            "name": "idreceiver",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "user456"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Lista de mensagens",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Message"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["idsender", "idreceiver"],
+                "properties": {
+                  "idsender": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "idreceiver": {
+                    "type": "string",
+                    "example": "user456"
                   }
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lista de mensagens"
           },
           "400": {
             "description": "Parâmetros ausentes"
@@ -113,9 +95,7 @@
     "/api/v1/signup": {
       "post": {
         "summary": "Criar novo usuário",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "requestBody": {
           "required": true,
           "content": {
@@ -160,9 +140,7 @@
     "/api/v1/login": {
       "post": {
         "summary": "Login do usuário",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "requestBody": {
           "required": true,
           "content": {

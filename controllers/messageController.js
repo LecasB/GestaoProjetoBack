@@ -28,7 +28,7 @@ const createMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
   try {
-    const { idsender, idreceiver } = req.query;
+    const { idsender, idreceiver } = req.body;
 
     if (!idsender || !idreceiver) {
       return res
