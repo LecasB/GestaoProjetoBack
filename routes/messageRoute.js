@@ -80,6 +80,6 @@ router.post("/newMessage", MessageController.createMessage);
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/getMessages", MessageController.getMessages);
+router.post("/getMessages", MessageController.getMessages);
 
 export default router;
