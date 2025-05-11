@@ -1,0 +1,218 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API MERN",
+    "version": "1.0.0",
+    "description": "Documentação da API com Swagger"
+  },
+  "paths": {
+    "/api/v1/newMessage": {
+      "post": {
+        "tags": [
+          "Mensagens"
+        ],
+        "summary": "Enviar uma nova mensagem",
+        "description": "Cria uma nova mensagem entre dois utilizadores.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "idsender",
+                  "idreceiver",
+                  "date",
+                  "message"
+                ],
+                "properties": {
+                  "idsender": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "idreceiver": {
+                    "type": "string",
+                    "example": "user456"
+                  },
+                  "date": {
+                    "type": "string",
+                    "example": "2025-05-11T14:33:00Z"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Olá, tudo bem?"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mensagem criada com sucesso"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/v1/getMessages": {
+      "get": {
+        "tags": [
+          "Mensagens"
+        ],
+        "summary": "Obter mensagens entre dois utilizadores",
+        "description": "Retorna todas as mensagens trocadas entre dois utilizadores.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "idsender",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "user123"
+          },
+          {
+            "in": "query",
+            "name": "idreceiver",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "user456"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de mensagens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros ausentes"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/v1/signup": {
+      "post": {
+        "summary": "Criar novo usuário",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "usuario123"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "usuario@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "senha123"
+                  },
+                  "descricao": {
+                    "type": "string",
+                    "example": "Sou um novo usuário."
+                  },
+                  "image": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso"
+          },
+          "400": {
+            "description": "Erro ao criar usuário"
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "summary": "Login do usuário",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "usuario@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "senha123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "jwt_token_aqui"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Senha incorreta"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}
