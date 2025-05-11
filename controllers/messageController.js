@@ -1,4 +1,5 @@
 import Message from "../models/Message.js";
+import User from "../models/User.js";
 
 const createMessage = async (req, res) => {
   try {
@@ -57,12 +58,10 @@ const getMessagesByUser = async (req, res) => {
       return res.status(400).json({ error: "userId é obrigatório" });
     }
 
-    // Find all messages where the user is either sender or receiver
     const messages = await Message.find({
       $or: [{ idsender: userId }, { idreceiver: userId }],
     });
 
-    // Extract unique conversation partner IDs
     const userIds = new Set();
 
     messages.forEach((msg) => {
@@ -74,7 +73,9 @@ const getMessagesByUser = async (req, res) => {
       }
     });
 
-    res.status(200).json({ users: Array.from(userIds) });
+    const users = await User.find({ _id: { $in: Array.from(userIds) } });
+
+    res.status(200).json({ users });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
