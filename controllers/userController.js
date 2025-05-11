@@ -69,7 +69,28 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID do usuário é obrigatório" });
+    }
+
+    const user = await User.findById(id).select("-password"); // Esconde a password
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   createUser,
   loginUser,
+  getUserById,
 };

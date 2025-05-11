@@ -49,7 +49,39 @@ const getMessages = async (req, res) => {
   }
 };
 
+const getMessagesByUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "userId é obrigatório" });
+    }
+
+    // Find all messages where the user is either sender or receiver
+    const messages = await Message.find({
+      $or: [{ idsender: userId }, { idreceiver: userId }],
+    });
+
+    // Extract unique conversation partner IDs
+    const userIds = new Set();
+
+    messages.forEach((msg) => {
+      if (msg.idsender.toString() !== userId) {
+        userIds.add(msg.idsender.toString());
+      }
+      if (msg.idreceiver.toString() !== userId) {
+        userIds.add(msg.idreceiver.toString());
+      }
+    });
+
+    res.status(200).json({ users: Array.from(userIds) });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   createMessage,
   getMessages,
+  getMessagesByUser,
 };

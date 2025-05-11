@@ -21,11 +21,11 @@
                 "properties": {
                   "idsender": {
                     "type": "string",
-                    "example": "user123"
+                    "example": "681fdfed8ff84f652a0dfb01"
                   },
                   "idreceiver": {
                     "type": "string",
-                    "example": "user456"
+                    "example": "681fe00d8ff84f652a0dfb03"
                   },
                   "date": {
                     "type": "string",
@@ -68,11 +68,11 @@
                 "properties": {
                   "idsender": {
                     "type": "string",
-                    "example": "user123"
+                    "example": "681fdfed8ff84f652a0dfb01"
                   },
                   "idreceiver": {
                     "type": "string",
-                    "example": "user456"
+                    "example": "681fe00d8ff84f652a0dfb03"
                   }
                 }
               }
@@ -85,6 +85,57 @@
           },
           "400": {
             "description": "Parâmetros ausentes"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/api/v1/getUserConversations": {
+      "post": {
+        "tags": ["Mensagens"],
+        "summary": "Listar IDs de utilizadores com quem o user comunicou",
+        "description": "Retorna uma lista de IDs únicos dos utilizadores que tiveram conversas com o utilizador especificado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId"],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "681fdfed8ff84f652a0dfb01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lista de IDs de utilizadores com quem houve conversa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["user456", "user789"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "userId não fornecido"
           },
           "500": {
             "description": "Erro interno do servidor"
@@ -133,6 +184,62 @@
           },
           "400": {
             "description": "Erro ao criar usuário"
+          }
+        }
+      }
+    },
+    "/api/v1/user/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Buscar usuário por ID",
+        "description": "Retorna os dados de um usuário pelo ID (sem password).",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do usuário no banco de dados",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "descricao": {
+                      "type": "string"
+                    },
+                    "image": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
           }
         }
       }

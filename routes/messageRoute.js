@@ -79,4 +79,45 @@ router.post("/newMessage", MessageController.createMessage);
  */
 router.post("/getMessages", MessageController.getMessages);
 
+/**
+ * @swagger
+ * /api/v1/getUserConversations:
+ *   post:
+ *     tags:
+ *       - Mensagens
+ *     summary: Listar IDs de utilizadores com quem o user comunicou
+ *     description: Retorna uma lista de IDs únicos dos utilizadores que tiveram conversas com o utilizador especificado.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: 681fdfed8ff84f652a0dfb01
+ *     responses:
+ *       200:
+ *         description: Lista de IDs de utilizadores com quem houve conversa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["681fdfed8ff84f652a0dfb01", "681fdfed8ff84f652a0dfb03"]
+ *       400:
+ *         description: userId não fornecido
+ *       500:
+ *         description: Erro interno do servidor
+ */
+
+router.post("/getUserConversations", MessageController.getMessagesByUser);
+
 export default router;

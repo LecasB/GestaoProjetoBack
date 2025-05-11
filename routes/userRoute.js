@@ -78,4 +78,46 @@ router.post("/signup", userController.createUser);
  */
 router.post("/login", userController.loginUser);
 
+/**
+ * @swagger
+ * /api/v1/user/{id}:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Buscar usuário por ID
+ *     description: Retorna os dados de um usuário pelo ID (sem password).
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do usuário no banco de dados
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Usuário encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 descricao:
+ *                   type: string
+ *                 image:
+ *                   type: string
+ *       400:
+ *         description: ID inválido
+ *       404:
+ *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.get("/user/:id", userController.getUserById);
+
 export default router;
