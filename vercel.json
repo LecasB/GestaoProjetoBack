@@ -10,14 +10,6 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
-    },
-    {
-      "src": "/swagger.json",
-      "dest": "/public/swagger.json"
-    },
-    {
-      "src": "/",
-      "dest": "/public/index.html"
     }
   ]
 }
