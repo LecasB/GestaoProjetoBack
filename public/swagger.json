@@ -165,13 +165,6 @@
                   "password": {
                     "type": "string",
                     "example": "senha123"
-                  },
-                  "descricao": {
-                    "type": "string",
-                    "example": "Sou um novo usuário."
-                  },
-                  "image": {
-                    "type": "string"
                   }
                 }
               }

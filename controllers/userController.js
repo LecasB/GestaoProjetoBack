@@ -4,9 +4,11 @@ import User from "../models/User.js";
 
 const createUser = async (req, res) => {
   try {
-    const { username, email, password, descricao, image } = req.body;
+    const { username, email, password } = req.body;
 
-    image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
+    let descricao = "Sou novo aqui";
+
+    let image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
 
     if (!username || !email || !password) {
       let camposNaoPreenchidos = [];
