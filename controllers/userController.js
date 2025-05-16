@@ -8,7 +8,7 @@ const createUser = async (req, res) => {
 
     let descricao = "Sou novo aqui";
 
-    let image = "https://i.ibb.co/chLJhfGz/default-icon.jpg";
+    let image = "https://i.ibb.co/bgdYBCH7/default-icon.jpg";
 
     if (!username || !email || !password) {
       let camposNaoPreenchidos = [];
@@ -93,8 +93,95 @@ const getUserById = async (req, res) => {
   }
 };
 
+const updateUserInfo = async (req, res) => {
+  try {
+    const { id, username, descricao } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID do usuário é obrigatório" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User não encontrado" });
+    }
+
+    if (descricao != null || descricao != user.descricao) {
+      user.descricao = descricao;
+    }
+
+    user.username = username ? username : user.username;
+
+    user.save();
+    res.status(200).json({ message: "User Atualizado" });
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+};
+
+const usermaneAvailable = async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ error: "Username é obrigatório." });
+    }
+
+    const existingUser = await User.findOne({ username });
+
+    if (existingUser) {
+      return res.status(400).json({ available: false });
+    }
+
+    return res.status(200).json({ available: true });
+  } catch (error) {
+    return res.status(500).json({ error: "Erro interno do servidor." });
+  }
+};
+
+const updateImageUser = async (req, res) => {
+  try {
+    const { id, photo } = req.body;
+
+    if (!id || !photo) {
+      return res.status(400).json({ error: "Dados têm de vir preenchidos" });
+    }
+
+    const user = await User.findById(id);
+
+    const response = await fetch(
+      `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          image: photo,
+          name: `${id}_avatar`,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    if (data) {
+      res.status(200).json({ message: "Imagem Atualizada" });
+      user.image = data.url;
+      user.save();
+    } else {
+      res.status(400).json({ error: "Erro desconhecido a atualizar imagem" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+};
+
 export default {
   createUser,
   loginUser,
   getUserById,
+  updateUserInfo,
+  usermaneAvailable,
+  updateImageUser,
 };
