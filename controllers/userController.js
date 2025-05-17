@@ -1,6 +1,7 @@
 import validator from "validator";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { BlobServiceClient } from "@azure/storage-blob";
 
 const createUser = async (req, res) => {
   try {
@@ -166,7 +167,7 @@ const updateImageUser = async (req, res) => {
 
     const data = await response.json();
     if (data) {
-      res.status(200).json({ message: "Imagem Atualizada" });
+      res.status(200).json({ message: data });
       user.image = data.url;
       user.save();
     } else {
@@ -177,7 +178,32 @@ const updateImageUser = async (req, res) => {
   }
 };
 
+const getImagesfromBucket = async (req, res) => {
+  try {
+    const containerName = "profiles";
+
+    // Create BlobServiceClient
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    const imageUrls = [];
+
+    for await (const blob of containerClient.listBlobsFlat()) {
+      const blobUrl = `https://xuobucket.blob.core.windows.net/${containerName}/${blob.name}`;
+      imageUrls.push(blobUrl);
+    }
+
+    return res.status(200).json({ images: imageUrls });
+  } catch (error) {
+    console.error("Error listing blobs:", error);
+    return res.status(500).json({ error: "Failed to list images from bucket" });
+  }
+};
+
 export default {
+  getImagesfromBucket,
   createUser,
   loginUser,
   getUserById,
