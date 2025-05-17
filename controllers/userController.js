@@ -143,10 +143,14 @@ const usermaneAvailable = async (req, res) => {
 
 const updateImageUser = async (req, res) => {
   try {
-    const { id, photo } = req.body;
+    const { id } = req.body;
+    const file = req.file;
 
-    if (!id || !photo) {
-      return res.status(400).json({ error: "Dados têm de vir preenchidos" });
+    if (!id || !file) {
+      if (!file) {
+        return res.status(400).json({ error: "imagem obrigatório" });
+      }
+      return res.status(400).json({ error: "ID  obrigatório" });
     }
 
     const user = await User.findById(id);
@@ -154,37 +158,34 @@ const updateImageUser = async (req, res) => {
       return res.status(404).json({ error: "Utilizador não encontrado" });
     }
 
+    // Preparar o upload
     const containerName = "profiles";
+    const fileName = `${id}.jpg`; // ou .png se preferires
+    const buffer = file.buffer;
 
-    // Criar BlobServiceClient
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       process.env.AZURE_STORAGE_CONNECTION_STRING
     );
     const containerClient = blobServiceClient.getContainerClient(containerName);
-
-    // Usar o id como nome da imagem
-    const fileName = `${id}.jpg`;
-
-    // Remover prefixo base64 e converter para buffer
-    const base64Data = photo.replace(/^data:image\/\w+;base64,/, "");
-    const buffer = Buffer.from(base64Data, "base64");
-
-    // Criar blob e fazer upload
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+    // Upload da imagem
     await blockBlobClient.uploadData(buffer, {
-      blobHTTPHeaders: { blobContentType: "image/jpeg" },
-      overwrite: true, // opcional: sobrescreve se já existir
+      blobHTTPHeaders: {
+        blobContentType: file.mimetype,
+      },
+      overwrite: true,
     });
 
-    const imageUrl = `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${containerName}/${fileName}`;
+    const imageUrl = `https://xuobucket.blob.core.windows.net/${containerName}/${fileName}`;
 
-    // Opcional: atualizar o user com a nova imagem
-    user.photo = imageUrl;
+    // Opcional: guardar no user
+    user.image = imageUrl;
     await user.save();
 
     return res.status(200).json({ imageUrl });
   } catch (error) {
-    console.error("Erro ao fazer upload da imagem:", error.message);
+    console.error("Erro no upload:", error.message);
     return res.status(500).json({ error: "Erro ao fazer upload da imagem" });
   }
 };

@@ -1,5 +1,6 @@
 import express from "express";
 import userController from "../controllers/userController.js";
+import uploadSingleImage from "../middlewares/uploadFile.js";
 const router = express.Router();
 
 /**
@@ -219,7 +220,11 @@ router.post("/user/usernameAvailable", userController.usermaneAvailable);
  *       400:
  *         description: Erro ao atualizar imagem ou dados ausentes
  */
-router.post("/user/updateImage", userController.updateImageUser);
+router.post(
+  "/user/updateImage",
+  uploadSingleImage,
+  userController.updateImageUser
+);
 
 //router.get("/getImages", userController.getImagesfromBucket);
 
