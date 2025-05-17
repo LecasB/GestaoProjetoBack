@@ -114,7 +114,7 @@ const updateUserInfo = async (req, res) => {
 
     user.username = username ? username : user.username;
 
-    user.save();
+    await user.save();
     res.status(200).json({ message: "User Atualizado" });
   } catch (error) {
     res.status(400).json({ error: error });
@@ -150,35 +150,46 @@ const updateImageUser = async (req, res) => {
     }
 
     const user = await User.findById(id);
-
-    const response = await fetch(
-      `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          image: photo,
-          name: `${id}_avatar`,
-        }),
-      }
-    );
-
-    const data = await response.json();
-    if (data) {
-      res.status(200).json({ message: data });
-      user.image = data.url;
-      user.save();
-    } else {
-      res.status(400).json({ error: "Erro desconhecido a atualizar imagem" });
+    if (!user) {
+      return res.status(404).json({ error: "Utilizador não encontrado" });
     }
+
+    const containerName = "profiles";
+
+    // Criar BlobServiceClient
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    // Usar o id como nome da imagem
+    const fileName = `${id}.jpg`;
+
+    // Remover prefixo base64 e converter para buffer
+    const base64Data = photo.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Data, "base64");
+
+    // Criar blob e fazer upload
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+    await blockBlobClient.uploadData(buffer, {
+      blobHTTPHeaders: { blobContentType: "image/jpeg" },
+      overwrite: true, // opcional: sobrescreve se já existir
+    });
+
+    const imageUrl = `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${containerName}/${fileName}`;
+
+    // Opcional: atualizar o user com a nova imagem
+    user.photo = imageUrl;
+    await user.save();
+
+    return res.status(200).json({ imageUrl });
   } catch (error) {
-    res.status(400).json({ error: error });
+    console.error("Erro ao fazer upload da imagem:", error.message);
+    return res.status(500).json({ error: "Erro ao fazer upload da imagem" });
   }
 };
 
-const getImagesfromBucket = async (req, res) => {
+/* const getImagesfromBucket = async (req, res) => {
   try {
     const containerName = "profiles";
 
@@ -200,10 +211,9 @@ const getImagesfromBucket = async (req, res) => {
     console.error("Error listing blobs:", error);
     return res.status(500).json({ error: "Failed to list images from bucket" });
   }
-};
+}; */
 
 export default {
-  getImagesfromBucket,
   createUser,
   loginUser,
   getUserById,

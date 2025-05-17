@@ -221,6 +221,6 @@ router.post("/user/usernameAvailable", userController.usermaneAvailable);
  */
 router.post("/user/updateImage", userController.updateImageUser);
 
-router.get("/getImages", userController.getImagesfromBucket);
+//router.get("/getImages", userController.getImagesfromBucket);
 
 export default router;
