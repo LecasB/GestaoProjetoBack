@@ -6,9 +6,221 @@
     "description": "Documentação da API com Swagger"
   },
   "paths": {
+    "/api/v1/items/user/{id}": {
+      "get": {
+        "summary": "Buscar itens por ID do vendedor (user)",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do vendedor (seller)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de itens do vendedor retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum item encontrado para este vendedor"
+          },
+          "500": {
+            "description": "Erro ao buscar os itens"
+          }
+        }
+      }
+    },
+    "/api/v1/items": {
+      "get": {
+        "summary": "Buscar todos os itens",
+        "tags": [
+          "Items"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de itens retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar os itens"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar um novo item",
+        "tags": [
+          "Items"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "idseller",
+                  "title",
+                  "description",
+                  "price",
+                  "images",
+                  "condition",
+                  "visibility"
+                ],
+                "properties": {
+                  "idseller": {
+                    "type": "string",
+                    "example": "abc123"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Smartphone Samsung Galaxy S21"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Telemóvel usado em ótimo estado"
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 299.99
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "https://example.com/image.jpg"
+                    ]
+                  },
+                  "condition": {
+                    "type": "string",
+                    "enum": [
+                      "new",
+                      "used",
+                      "refurbished",
+                      "broken"
+                    ],
+                    "example": "used"
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "onsale",
+                      "sold",
+                      "hidden"
+                    ],
+                    "example": "onsale"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item criado com sucesso"
+          },
+          "400": {
+            "description": "Erro na validação ou criação do item"
+          }
+        }
+      }
+    },
+    "/api/v1/items/{id}": {
+      "get": {
+        "summary": "Buscar item por ID",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do item",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retornado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item não encontrado"
+          },
+          "500": {
+            "description": "Erro ao buscar o item"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar item por ID",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do item a eliminar",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item eliminado com sucesso"
+          },
+          "404": {
+            "description": "Item não encontrado"
+          },
+          "500": {
+            "description": "Erro ao eliminar item"
+          }
+        }
+      }
+    },
     "/api/v1/newMessage": {
       "post": {
-        "tags": ["Mensagens"],
+        "tags": [
+          "Mensagens"
+        ],
         "summary": "Enviar uma nova mensagem",
         "description": "Cria uma nova mensagem entre dois utilizadores.",
         "requestBody": {
@@ -17,15 +229,20 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["idsender", "idreceiver", "date", "message"],
+                "required": [
+                  "idsender",
+                  "idreceiver",
+                  "date",
+                  "message"
+                ],
                 "properties": {
                   "idsender": {
                     "type": "string",
-                    "example": "681fdfed8ff84f652a0dfb01"
+                    "example": "user123"
                   },
                   "idreceiver": {
                     "type": "string",
-                    "example": "681fe00d8ff84f652a0dfb03"
+                    "example": "user456"
                   },
                   "date": {
                     "type": "string",
@@ -55,7 +272,9 @@
     },
     "/api/v1/getMessages": {
       "post": {
-        "tags": ["Mensagens"],
+        "tags": [
+          "Mensagens"
+        ],
         "summary": "Obter mensagens entre dois utilizadores",
         "description": "Retorna todas as mensagens trocadas entre dois utilizadores.",
         "requestBody": {
@@ -64,15 +283,18 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["idsender", "idreceiver"],
+                "required": [
+                  "idsender",
+                  "idreceiver"
+                ],
                 "properties": {
                   "idsender": {
                     "type": "string",
-                    "example": "681fdfed8ff84f652a0dfb01"
+                    "example": "user123"
                   },
                   "idreceiver": {
                     "type": "string",
-                    "example": "681fe00d8ff84f652a0dfb03"
+                    "example": "user456"
                   }
                 }
               }
@@ -94,7 +316,9 @@
     },
     "/api/v1/getUserConversations": {
       "post": {
-        "tags": ["Mensagens"],
+        "tags": [
+          "Mensagens"
+        ],
         "summary": "Listar IDs de utilizadores com quem o user comunicou",
         "description": "Retorna uma lista de IDs únicos dos utilizadores que tiveram conversas com o utilizador especificado.",
         "requestBody": {
@@ -103,7 +327,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["userId"],
+                "required": [
+                  "userId"
+                ],
                 "properties": {
                   "userId": {
                     "type": "string",
@@ -127,7 +353,10 @@
                       "items": {
                         "type": "string"
                       },
-                      "example": ["user456", "user789"]
+                      "example": [
+                        "681fdfed8ff84f652a0dfb01",
+                        "681fdfed8ff84f652a0dfb03"
+                      ]
                     }
                   }
                 }
@@ -146,7 +375,9 @@
     "/api/v1/signup": {
       "post": {
         "summary": "Criar novo usuário",
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -181,9 +412,66 @@
         }
       }
     },
+    "/api/v1/login": {
+      "post": {
+        "summary": "Login do usuário",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "usuario@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "senha123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "jwt_token_aqui"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Senha incorreta"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
     "/api/v1/user/{id}": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Buscar usuário por ID",
         "description": "Retorna os dados de um usuário pelo ID (sem password).",
         "parameters": [
@@ -237,62 +525,11 @@
         }
       }
     },
-    "/api/v1/login": {
-      "post": {
-        "summary": "Login do usuário",
-        "tags": ["Users"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "usuario@email.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "senha123"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Login realizado com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "example": "jwt_token_aqui"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Senha incorreta"
-          },
-          "404": {
-            "description": "Usuário não encontrado"
-          },
-          "500": {
-            "description": "Erro interno do servidor"
-          }
-        }
-      }
-    },
     "/api/v1/user/updateInfo": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Atualiza informações do usuário",
         "description": "Atualiza o username e/ou descrição de um usuário.",
         "requestBody": {
@@ -301,7 +538,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["id"],
+                "required": [
+                  "id"
+                ],
                 "properties": {
                   "id": {
                     "type": "string",
@@ -335,7 +574,9 @@
     },
     "/api/v1/user/usernameAvailable": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Verifica se o username está disponível",
         "description": "Verifica se já existe um usuário com o username fornecido.",
         "requestBody": {
@@ -344,7 +585,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["username"],
+                "required": [
+                  "username"
+                ],
                 "properties": {
                   "username": {
                     "type": "string",
@@ -383,7 +626,9 @@
     },
     "/api/v1/user/updateImage": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Atualiza a imagem do usuário",
         "description": "Faz upload da imagem do usuário para o serviço de imagem e atualiza o campo correspondente.",
         "requestBody": {
@@ -392,7 +637,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["id", "photo"],
+                "required": [
+                  "id",
+                  "photo"
+                ],
                 "properties": {
                   "id": {
                     "type": "string",
