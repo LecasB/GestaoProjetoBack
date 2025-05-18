@@ -70,7 +70,74 @@
             "description": "Erro ao buscar os itens"
           }
         }
+      }
+    },
+    "/api/v1/items/{id}": {
+      "get": {
+        "summary": "Buscar item por ID",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do item",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retornado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item não encontrado"
+          },
+          "500": {
+            "description": "Erro ao buscar o item"
+          }
+        }
       },
+      "delete": {
+        "summary": "Eliminar item por ID",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do item a eliminar",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item eliminado com sucesso"
+          },
+          "404": {
+            "description": "Item não encontrado"
+          },
+          "500": {
+            "description": "Erro ao eliminar item"
+          }
+        }
+      }
+    },
+    "/api/v1/newItem": {
       "post": {
         "summary": "Criar um novo item",
         "tags": [
@@ -147,71 +214,6 @@
           },
           "400": {
             "description": "Erro na validação ou criação do item"
-          }
-        }
-      }
-    },
-    "/api/v1/items/{id}": {
-      "get": {
-        "summary": "Buscar item por ID",
-        "tags": [
-          "Items"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "ID do item",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Item retornado com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Item não encontrado"
-          },
-          "500": {
-            "description": "Erro ao buscar o item"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Eliminar item por ID",
-        "tags": [
-          "Items"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "ID do item a eliminar",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Item eliminado com sucesso"
-          },
-          "404": {
-            "description": "Item não encontrado"
-          },
-          "500": {
-            "description": "Erro ao eliminar item"
           }
         }
       }

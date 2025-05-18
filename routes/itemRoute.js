@@ -85,7 +85,7 @@ router.get("/items/:id", itemController.getItemById);
 
 /**
  * @swagger
- * /api/v1/items:
+ * /api/v1/newItem:
  *   post:
  *     summary: Criar um novo item
  *     tags:
