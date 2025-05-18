@@ -35,25 +35,50 @@ export const getItemById = async (req, res) => {
   }
 };
 
+import Item from "../models/Item.js";
+import { BlobServiceClient } from "@azure/storage-blob";
+
 export const createItem = async (req, res) => {
   try {
-    const {
-      idseller,
-      title,
-      description,
-      price,
-      images,
-      condition,
-      visibility,
-    } = req.body;
+    const { idseller, title, description, price, condition, visibility } =
+      req.body;
 
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "Nenhuma imagem recebida." });
+    }
+
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerName = "items"; // Container para itens
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    // Upload todas as imagens para Azure e guardar URLs
+    const imageUrls = [];
+
+    for (const file of req.files) {
+      const timestamp = Date.now();
+      const uniqueFileName = `${idseller}-${timestamp}-${file.originalname}`;
+
+      const blockBlobClient =
+        containerClient.getBlockBlobClient(uniqueFileName);
+
+      await blockBlobClient.uploadData(file.buffer, {
+        blobHTTPHeaders: { blobContentType: file.mimetype },
+        overwrite: true,
+      });
+
+      const url = `https://xuobucket.blob.core.windows.net/${containerName}/${fileName}`;
+      imageUrls.push(url);
+    }
+
+    // Verifica campos obrigatórios
     let missingFields = [];
     if (!idseller) missingFields.push("idseller");
     if (!title) missingFields.push("title");
     if (!description) missingFields.push("description");
     if (price === undefined) missingFields.push("price");
-    if (!images || !Array.isArray(images) || images.length === 0)
-      missingFields.push("images");
+    if (!imageUrls || imageUrls.length === 0) missingFields.push("images");
     if (!condition) missingFields.push("condition");
     if (!visibility) missingFields.push("visibility");
 
@@ -64,22 +89,24 @@ export const createItem = async (req, res) => {
       });
     }
 
+    // Criar o novo item com URLs das imagens
     const newItem = new Item({
       idseller,
       title,
       description,
       price,
-      images,
+      images: imageUrls,
       condition,
       visibility,
     });
 
     await newItem.save();
 
-    res.status(201).json(newItem);
+    return res.status(201).json(newItem);
   } catch (err) {
-    res
-      .status(400)
+    console.error(err);
+    return res
+      .status(500)
       .json({ error: "Erro ao criar o item.", details: err.message });
   }
 };

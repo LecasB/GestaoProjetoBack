@@ -1,6 +1,7 @@
 import express from "express";
 import itemController from "../controllers/itemController.js";
 import uploadSingleImage from "../middlewares/uploadFile.js";
+import uploadMultiImages from "../middlewares/uploadMultiFiles.js";
 
 const router = express.Router();
 
@@ -136,7 +137,7 @@ router.get("/items/:id", itemController.getItemById);
  *       400:
  *         description: Erro na validação ou criação do item
  */
-router.post("/newItem", uploadSingleImage, itemController.createItem);
+router.post("/newItem", uploadMultiImages, itemController.createItem);
 
 /**
  * @swagger
