@@ -137,6 +137,7 @@ router.get("/items/:id", itemController.getItemById);
  *       400:
  *         description: Erro na validação ou criação do item
  */
+
 router.post("/newItem", uploadMultiImages, itemController.createItem);
 
 /**

@@ -35,9 +35,6 @@ export const getItemById = async (req, res) => {
   }
 };
 
-import Item from "../models/Item.js";
-import { BlobServiceClient } from "@azure/storage-blob";
-
 export const createItem = async (req, res) => {
   try {
     const { idseller, title, description, price, condition, visibility } =
@@ -50,10 +47,9 @@ export const createItem = async (req, res) => {
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       process.env.AZURE_STORAGE_CONNECTION_STRING
     );
-    const containerName = "items"; // Container para itens
+    const containerName = "items";
     const containerClient = blobServiceClient.getContainerClient(containerName);
 
-    // Upload todas as imagens para Azure e guardar URLs
     const imageUrls = [];
 
     for (const file of req.files) {
