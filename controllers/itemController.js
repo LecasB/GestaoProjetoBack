@@ -65,7 +65,7 @@ export const createItem = async (req, res) => {
         overwrite: true,
       });
 
-      const url = `https://xuobucket.blob.core.windows.net/${containerName}/${fileName}`;
+      const url = `https://xuobucket.blob.core.windows.net/${containerName}/${uniqueFileName}`;
       imageUrls.push(url);
     }
 
