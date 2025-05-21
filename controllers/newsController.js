@@ -47,6 +47,16 @@ const create = async (req, res) => {
   }
 };
 
+const sanitize = (text) => {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, "-") // Espaços para hífens
+    .replace(/[^\w\-]+/g, "") // Remove caracteres inválidos
+    .replace(/\-\-+/g, "-") // Hífens consecutivos
+    .replace(/^-+/, "") // Remove hífen do início
+    .replace(/-+$/, ""); // Remove hífen do fim
+};
+
 const update = async (req, res) => {
   try {
     const { id, title, redirection } = req.body;
@@ -67,58 +77,79 @@ const update = async (req, res) => {
     );
     const containerClient = blobServiceClient.getContainerClient(containerName);
 
-    // Se o título mudou, renomear a imagem (copiar + deletar)
+    // Verifica se o título mudou para renomear a imagem
     if (title && title !== news.title) {
-      const oldFileName = `${news.title}.jpg`;
-      const newFileName = `${title}.jpg`;
+      try {
+        const currentImageUrl = news.image;
+        const urlParts = currentImageUrl.split("/");
+        const encodedFileName = urlParts[urlParts.length - 1];
+        const oldFileName = decodeURIComponent(encodedFileName);
+        const newFileName = `${sanitize(title)}.jpg`;
 
-      const oldBlobClient = containerClient.getBlockBlobClient(oldFileName);
-      const newBlobClient = containerClient.getBlockBlobClient(newFileName);
+        const oldBlobClient = containerClient.getBlockBlobClient(oldFileName);
+        const newBlobClient = containerClient.getBlockBlobClient(newFileName);
 
-      // Copiar o blob para o novo nome
-      const copyPoller = await newBlobClient.beginCopyFromURL(
-        oldBlobClient.url
-      );
-      await copyPoller.pollUntilDone();
+        const exists = await oldBlobClient.exists();
+        if (!exists) {
+          return res
+            .status(404)
+            .json({
+              error: `Imagem antiga (${oldFileName}) não encontrada no Azure.`,
+            });
+        }
 
-      // Deletar o antigo blob
-      await oldBlobClient.deleteIfExists();
+        const copyPoller = await newBlobClient.beginCopyFromURL(
+          oldBlobClient.url
+        );
+        await copyPoller.pollUntilDone();
 
-      // Atualizar o campo image para o novo URL
-      news.image = `https://xuobucket.blob.core.windows.net/${containerName}/${newFileName}`;
-      news.title = title;
+        await oldBlobClient.deleteIfExists();
+
+        news.image = `https://xuobucket.blob.core.windows.net/${containerName}/${newFileName}`;
+        news.title = title;
+      } catch (error) {
+        console.error("Erro ao renomear imagem no Azure:", error.message);
+        return res
+          .status(500)
+          .json({ erro: "Erro ao atualizar imagem na Azure" });
+      }
     } else if (title) {
-      // Só atualizar o título no documento se mudou
       news.title = title;
+    }
+
+    // Se nova imagem for enviada, faz upload
+    if (imageFile) {
+      try {
+        const fileName = `${sanitize(news.title)}.jpg`; // usa o título atualizado ou atual
+        const buffer = imageFile.buffer;
+
+        const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+        await blockBlobClient.uploadData(buffer, {
+          blobHTTPHeaders: {
+            blobContentType: imageFile.mimetype,
+          },
+          overwrite: true,
+        });
+
+        news.image = `https://xuobucket.blob.core.windows.net/${containerName}/${fileName}`;
+      } catch (error) {
+        console.error("Erro no upload da nova imagem:", error.message);
+        return res
+          .status(500)
+          .json({ erro: "Erro ao fazer upload da nova imagem" });
+      }
     }
 
     if (redirection) {
       news.redirection = redirection;
     }
 
-    // Se enviar uma nova imagem, fazer upload com o nome atual (já atualizado se mudou o título)
-    if (imageFile) {
-      const fileName = `${news.title}.jpg`;
-      const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-      try {
-        await blockBlobClient.uploadData(imageFile.buffer, {
-          blobHTTPHeaders: {
-            blobContentType: imageFile.mimetype,
-          },
-          overwrite: true,
-        });
-        // Atualiza a URL da imagem (em caso de upload novo)
-        news.image = `https://xuobucket.blob.core.windows.net/${containerName}/${fileName}`;
-      } catch (error) {
-        return res.status(400).json({ error: "Erro ao carregar a imagem" });
-      }
-    }
-
     await news.save();
 
     return res.status(200).json({ message: "Notícia atualizada com sucesso" });
   } catch (error) {
-    return res.status(500).json({ error: error.message || error });
+    console.error("Erro geral no update:", error.message);
+    return res.status(500).json({ erro: "Erro interno no servidor" });
   }
 };
 
