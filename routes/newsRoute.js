@@ -93,4 +93,36 @@ router.post("/news/create", uploadSingleImage, newsController.create);
  */
 router.put("/news/update", uploadSingleImage, newsController.update);
 
+/**
+ * @swagger
+ * /api/v1/news/delete:
+ *   delete:
+ *     summary: Elimina uma notícia
+ *     description: Elimina uma notícia existente com base no ID e remove a imagem associada do Azure Blob Storage.
+ *     tags:
+ *       - News
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: ID da notícia a eliminar
+ *                 example: "6650a5c4b99a92a7b07d2ac2"
+ *     responses:
+ *       200:
+ *         description: Notícia eliminada com sucesso
+ *       400:
+ *         description: ID não fornecido ou inválido
+ *       404:
+ *         description: Notícia não encontrada
+ *       500:
+ *         description: Erro interno ao eliminar a notícia
+ */
+router.delete("/news/delete", newsController.remove);
 export default router;

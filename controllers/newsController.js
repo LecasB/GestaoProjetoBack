@@ -91,11 +91,9 @@ const update = async (req, res) => {
 
         const exists = await oldBlobClient.exists();
         if (!exists) {
-          return res
-            .status(404)
-            .json({
-              error: `Imagem antiga (${oldFileName}) não encontrada no Azure.`,
-            });
+          return res.status(404).json({
+            error: `Imagem antiga (${oldFileName}) não encontrada no Azure.`,
+          });
         }
 
         const copyPoller = await newBlobClient.beginCopyFromURL(
@@ -153,7 +151,45 @@ const update = async (req, res) => {
   }
 };
 
+const remove = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID é obrigatório" });
+    }
+
+    const news = await News.findById(id);
+    if (!news) {
+      return res.status(404).json({ error: "Notícia não encontrada" });
+    }
+
+    // Extrai o nome do ficheiro da imagem
+    const imageUrl = news.image;
+    const fileName = decodeURIComponent(imageUrl.split("/").pop());
+
+    // Remover imagem da Azure Blob Storage
+    const containerName = "news";
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+    const blobClient = containerClient.getBlockBlobClient(fileName);
+
+    await blobClient.deleteIfExists();
+
+    // Remover documento da base de dados
+    await News.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Notícia eliminada com sucesso" });
+  } catch (error) {
+    console.error("Erro ao eliminar notícia:", error.message);
+    return res.status(500).json({ erro: "Erro interno ao eliminar notícia" });
+  }
+};
+
 export default {
   create,
   update,
+  remove,
 };
