@@ -198,10 +198,12 @@ router.post("/user/usernameAvailable", userController.usermaneAvailable);
  *       - Users
  *     summary: Atualiza a imagem do usuário
  *     description: Faz upload da imagem do usuário para o serviço de imagem e atualiza o campo correspondente.
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -210,10 +212,12 @@ router.post("/user/usernameAvailable", userController.usermaneAvailable);
  *             properties:
  *               id:
  *                 type: string
+ *                 description: ID do usuário
  *                 example: "681fdfed8ff84f652a0dfb01"
  *               photo:
  *                 type: string
- *                 example: "base64ImagemAqui..."
+ *                 format: binary
+ *                 description: Imagem (arquivo) do usuário
  *     responses:
  *       200:
  *         description: Imagem atualizada com sucesso
