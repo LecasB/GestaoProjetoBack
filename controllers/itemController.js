@@ -3,9 +3,34 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 export const getItems = async (req, res) => {
   try {
-    const items = await Item.find();
+    const { title, minPrice, maxPrice, condition } = req.query;
+
+    const filter = {
+      visibility: "onsale", // <-- adicionando filtro fixo
+    };
+
+    // Filtro por título (substring, insensível a maiúsculas)
+    if (title) {
+      filter.title = { $regex: title, $options: "i" };
+    }
+
+    // Filtro por faixa de preço
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = parseFloat(minPrice);
+      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+    }
+
+    // Filtro por condição (uma ou várias separadas por vírgula)
+    if (condition) {
+      const conditionsArray = condition.split(",");
+      filter.condition = { $in: conditionsArray };
+    }
+
+    const items = await Item.find(filter);
     res.status(200).json(items);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Erro ao buscar os itens." });
   }
 };
