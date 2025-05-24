@@ -39,9 +39,30 @@ router.get("/items/user/:id", itemController.getItemsByUserId);
  * @swagger
  * /api/v1/items:
  *   get:
- *     summary: Buscar todos os itens
+ *     summary: Buscar itens com filtros opcionais
  *     tags:
  *       - Items
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Palavras-chave para buscar no título
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *         description: Preço mínimo
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *         description: Preço máximo
+ *       - in: query
+ *         name: condition
+ *         schema:
+ *           type: string
+ *         description: "Condições separadas por vírgula (ex: new,used)"
  *     responses:
  *       200:
  *         description: Lista de itens retornada com sucesso
