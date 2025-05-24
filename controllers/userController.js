@@ -94,6 +94,20 @@ const getUserById = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // Esconde a password
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: "Nenhum usuário encontrado" });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const updateUserInfo = async (req, res) => {
   try {
     const { id, username, descricao } = req.body;
@@ -216,6 +230,7 @@ const updateImageUser = async (req, res) => {
 
 export default {
   createUser,
+  getUsers,
   loginUser,
   getUserById,
   updateUserInfo,

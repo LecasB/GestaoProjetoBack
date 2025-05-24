@@ -8,6 +8,7 @@ import { swaggerSpec, swaggerUi } from "../utils/swagger.js";
 import userRouter from "../routes/userRoute.js";
 import messageRouter from "../routes/messageRoute.js";
 import itemRouter from "../routes/itemRoute.js";
+import newsRoute from "../routes/newsRoute.js";
 import favoriteRouter from "../routes/favoriteRoute.js";
 import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io"; // Ensure Socket.IO is imported correctly
@@ -76,6 +77,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", userRouter);
 app.use("/api/v1", messageRouter);
 app.use("/api/v1", itemRouter);
+app.use("/api/v1", newsRoute);
 app.use("/api/v1", favoriteRouter);
 
 // Listen on the HTTP server
