@@ -116,6 +116,7 @@ router.post("/login", userController.loginUser);
  */
 router.get("/user/:id", userController.getUserById);
 
+router.get("/users", userController.getUsers);
 /**
  * @swagger
  * /api/v1/user/updateInfo:
