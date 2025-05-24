@@ -2,6 +2,7 @@ import validator from "validator";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { BlobServiceClient } from "@azure/storage-blob";
+import { error } from "console";
 
 const createUser = async (req, res) => {
   try {
@@ -131,7 +132,7 @@ const updateUserInfo = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "User Atualizado" });
   } catch (error) {
-    res.status(400).json({ error: error });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -204,29 +205,25 @@ const updateImageUser = async (req, res) => {
   }
 };
 
-/* const getImagesfromBucket = async (req, res) => {
+const deleteUserById = async (req, res) => {
   try {
-    const containerName = "profiles";
+    const { id } = req.params;
 
-    // Create BlobServiceClient
-    const blobServiceClient = BlobServiceClient.fromConnectionString(
-      process.env.AZURE_STORAGE_CONNECTION_STRING
-    );
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-
-    const imageUrls = [];
-
-    for await (const blob of containerClient.listBlobsFlat()) {
-      const blobUrl = `https://xuobucket.blob.core.windows.net/${containerName}/${blob.name}`;
-      imageUrls.push(blobUrl);
+    if (!id) {
+      res.status(400).json({ error: "Id obrigatorio" });
     }
 
-    return res.status(200).json({ images: imageUrls });
+    const deleted = await User.findByIdAndDelete(id);
+
+    if (!deleted) {
+      res.status(404).json({ error: "User não encontrado" });
+    }
+
+    return res.status(200).json({ message: "User removido com sucesso" });
   } catch (error) {
-    console.error("Error listing blobs:", error);
-    return res.status(500).json({ error: "Failed to list images from bucket" });
+    res.status(500).json({ error: error.message });
   }
-}; */
+};
 
 export default {
   createUser,
@@ -236,4 +233,5 @@ export default {
   updateUserInfo,
   usermaneAvailable,
   updateImageUser,
+  deleteUserById,
 };

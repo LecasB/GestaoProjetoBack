@@ -231,6 +231,61 @@ router.post(
   userController.updateImageUser
 );
 
-//router.get("/getImages", userController.getImagesfromBucket);
+/**
+ * @swagger
+ * /api/v1/user/deleteById/{id}:
+ *   delete:
+ *     summary: Remove um usuário pelo ID
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do usuário a ser removido
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Usuário removido com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User removido com sucesso
+ *       400:
+ *         description: ID não fornecido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Id obrigatorio
+ *       404:
+ *         description: Usuário não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: User não encontrado
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
+router.delete("/user/deleteById/:id", userController.deleteUserById);
 
 export default router;
