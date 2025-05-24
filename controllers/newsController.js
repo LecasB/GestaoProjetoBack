@@ -188,8 +188,19 @@ const remove = async (req, res) => {
   }
 };
 
+const getRandomNews = async (req, res) => {
+  try {
+    const randomNews = await News.aggregate([{ $sample: { size: 3 } }]);
+    return res.status(200).json({ news: randomNews });
+  } catch (error) {
+    console.error("Erro ao buscar notícias aleatórias:", error.message);
+    return res.status(500).json({ erro: "Erro interno do servidor" });
+  }
+};
+
 export default {
   create,
   update,
   remove,
+  getRandomNews,
 };

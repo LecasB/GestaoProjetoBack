@@ -125,4 +125,54 @@ router.put("/news/update", uploadSingleImage, newsController.update);
  *         description: Erro interno ao eliminar a notícia
  */
 router.delete("/news/delete", newsController.remove);
+
+/**
+ * @swagger
+ * /api/v1/news/random:
+ *   get:
+ *     summary: Retorna 3 notícias aleatórias
+ *     tags:
+ *       - News
+ *     responses:
+ *       200:
+ *         description: Lista de 3 notícias aleatórias
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 news:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "6827c3d6b2683121282808d1"
+ *                       title:
+ *                         type: string
+ *                         example: "Smartphone Samsung Galaxy S24"
+ *                       redirection:
+ *                         type: string
+ *                         example: "https://example.com/news/123"
+ *                       image:
+ *                         type: string
+ *                         format: uri
+ *                         example: "https://xuobucket.blob.core.windows.net/news/smartphone-samsung-galaxy-s24.jpg"
+ *                       __v:
+ *                         type: integer
+ *                         example: 0
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 erro:
+ *                   type: string
+ *                   example: Erro interno do servidor
+ */
+router.get("/news/random", newsController.getRandomNews);
+
 export default router;
