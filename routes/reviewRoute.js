@@ -16,10 +16,15 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - idUser
+ *               - idVendor
+ *               - rate
+ *               - descricao
  *             properties:
  *               idUser:
  *                 type: string
- *                 example: "654d3c...f33"
+ *                 example: "654d3cf98eaa6e2192dfaf33"
  *               idVendor:
  *                 type: string
  *                 example: "vendor123"
@@ -28,6 +33,9 @@ const router = express.Router();
  *                 minimum: 1
  *                 maximum: 5
  *                 example: 4
+ *               descricao:
+ *                 type: string
+ *                 example: "Ótimo atendimento, recomendo!"
  *     responses:
  *       201:
  *         description: Review criada com sucesso
@@ -40,7 +48,7 @@ router.post("/review", reviewController.create);
 
 /**
  * @swagger
- * /api/v1/review/{id}:
+ * /api/v1/review/{id}/rate:
  *   get:
  *     summary: Obter total de reviews e média de avaliação de um vendedor
  *     tags:
@@ -69,6 +77,56 @@ router.post("/review", reviewController.create);
  *       500:
  *         description: Erro ao buscar estatísticas de reviews
  */
-router.get("/review/:id", reviewController.getRateById);
+router.get("/review/:id/rate", reviewController.getRateById);
+
+/**
+ * @swagger
+ * /api/v1/review/{id}:
+ *   get:
+ *     summary: Listar todas as reviews de um vendedor
+ *     tags:
+ *       - Reviews
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do vendedor (idVendor)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de reviews do vendedor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 reviews:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "66521e4c8e5c1cdb9e72e2a1"
+ *                       idUser:
+ *                         type: string
+ *                         example: "664fde1988eaa6e2192dfe3a"
+ *                       idVendor:
+ *                         type: string
+ *                         example: "vendor123"
+ *                       descicao:
+ *                         type: string
+ *                         example: "vendor123"
+ *                       rate:
+ *                         type: integer
+ *                         example: 5
+ *                       __v:
+ *                         type: integer
+ *                         example: 0
+ *       500:
+ *         description: Erro ao buscar as reviews
+ */
+router.get("/review/:id", reviewController.getReviewsById);
 
 export default router;

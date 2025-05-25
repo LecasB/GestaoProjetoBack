@@ -2,9 +2,9 @@ import Review from "../models/Review.js";
 
 const create = async (req, res) => {
   try {
-    const { idUser, idVendor, rate } = req.body;
+    const { idUser, idVendor, descricao, rate } = req.body;
 
-    if (!idUser || !idVendor || !rate) {
+    if (!idUser || !idVendor || !rate || !descricao) {
       res.status(400).json({ error: "Campos obrigatorios não preenchidos" });
     }
 
@@ -14,7 +14,7 @@ const create = async (req, res) => {
         .json({ error: "Rate não está dentro do range permitido (1 - 5)" });
     }
 
-    const review = new Review({ idUser, idVendor, rate });
+    const review = new Review({ idUser, idVendor, descricao, rate });
     await review.save();
 
     res.status(201).json(true);
@@ -45,4 +45,18 @@ const getRateById = async (req, res) => {
   }
 };
 
-export default { create, getRateById };
+const getReviewsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const reviews = await Review.find({ idVendor: id });
+
+    res.status(200).json({
+      reviews,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default { create, getRateById, getReviewsById };
