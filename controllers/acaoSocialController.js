@@ -1,4 +1,4 @@
-import AcaoSocial from "../models/AcaoSocial";
+import AcaoSocial from "../models/AcaoSocial.js";
 import { BlobServiceClient } from "@azure/storage-blob";
 
 export const createAcaoSocial = async (req, res) => {
@@ -97,15 +97,39 @@ export const getAcaoSocialById = async (req, res) => {
 export const deleteAcaoSocial = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await AcaoSocial.findByIdAndDelete(id);
 
-    if (!deleted) {
+    const acao = await AcaoSocial.findById(id);
+
+    if (!acao) {
       return res
         .status(404)
         .json({ message: "Ação social não encontrada para exclusão." });
     }
 
-    res.status(200).json({ message: "Ação social deletada com sucesso." });
+    // Azure config
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      process.env.AZURE_STORAGE_CONNECTION_STRING
+    );
+    const containerName = "acaosociais";
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    // Deleta as imagens no Azure
+    for (const imageUrl of acao.images) {
+      // Extrai o nome do blob a partir da URL
+      const fileName = imageUrl.split("/").pop();
+
+      if (fileName) {
+        const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+        await blockBlobClient.deleteIfExists();
+      }
+    }
+
+    // Deleta o documento do MongoDB
+    await AcaoSocial.findByIdAndDelete(id);
+
+    res
+      .status(200)
+      .json({ message: "Ação social e imagens deletadas com sucesso." });
   } catch (error) {
     console.error("Erro ao deletar ação social:", error);
     res.status(500).json({ message: "Erro ao deletar ação social." });
