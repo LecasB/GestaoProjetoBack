@@ -6,10 +6,10 @@ export const getItems = async (req, res) => {
     const { title, minPrice, maxPrice, condition } = req.query;
 
     const filter = {
-      visibility: "onsale", // <-- adicionando filtro fixo
+      visibility: "onsale",
     };
 
-    // Filtro por título (substring, insensível a maiúsculas)
+    // Filtro por título (case-insensitive)
     if (title) {
       filter.title = { $regex: title, $options: "i" };
     }
@@ -21,10 +21,16 @@ export const getItems = async (req, res) => {
       if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
     }
 
-    // Filtro por condição (uma ou várias separadas por vírgula)
+    // Filtro por condição
     if (condition) {
-      const conditionsArray = condition.split(",");
-      filter.condition = { $in: conditionsArray };
+      const conditionsArray = condition
+        .split(",")
+        .map((c) => c.trim())
+        .filter((c) => c.length > 0); // remove entradas vazias
+
+      if (conditionsArray.length > 0) {
+        filter.condition = { $in: conditionsArray };
+      }
     }
 
     const items = await Item.find(filter);
