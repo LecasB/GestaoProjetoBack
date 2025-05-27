@@ -22,44 +22,41 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 items:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         example: "6827c3d6b2683121282808d1"
- *                       idseller:
- *                         type: string
- *                         example: "681fdfed8ff84f652a0dfb01"
- *                       title:
- *                         type: string
- *                         example: "Smartphone Samsung Galaxy S24"
- *                       description:
- *                         type: string
- *                         example: "Telemóvel usado em ótimo estado"
- *                       price:
- *                         type: number
- *                         format: float
- *                         example: 199.99
- *                       images:
- *                         type: array
- *                         items:
- *                           type: string
- *                           format: uri
- *                           example: "https://images.samsung.com/is/image/samsung/p6pim/pt/sm-a566bliceub/gallery/pt-galaxy-a56-5g-sm-a566-sm-a566bliceub-thumb-545305043?$UX_EXT2_PNG$"
- *                       condition:
- *                         type: string
- *                         example: "used"
- *                       visibility:
- *                         type: string
- *                         example: "onsale"
- *                       __v:
- *                         type: integer
- *                         example: 0
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: "6827c3d6b2683121282808d1"
+ *                   idseller:
+ *                     type: string
+ *                     example: "681fdfed8ff84f652a0dfb01"
+ *                   title:
+ *                     type: string
+ *                     example: "Smartphone Samsung Galaxy S24"
+ *                   description:
+ *                     type: string
+ *                     example: "Telemóvel usado em ótimo estado"
+ *                   price:
+ *                     type: number
+ *                     format: float
+ *                     example: 199.99
+ *                   images:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       format: uri
+ *                       example: "https://images.samsung.com/is/image/samsung/p6pim/pt/sm-a566bliceub/gallery/pt-galaxy-a56-5g-sm-a566-sm-a566bliceub-thumb-545305043?$UX_EXT2_PNG$"
+ *                   condition:
+ *                     type: string
+ *                     example: "used"
+ *                   visibility:
+ *                     type: string
+ *                     example: "onsale"
+ *                   __v:
+ *                     type: integer
+ *                     example: 0
  *       400:
  *         description: ID do usuário não fornecido
  *         content:

@@ -16,7 +16,7 @@ const getAllByUserId = async (req, res) => {
     // Retorna só os itens populados
     const items = favoritos.map((fav) => fav.iditem);
 
-    return res.status(200).json({ items });
+    return res.status(200).json(items);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
