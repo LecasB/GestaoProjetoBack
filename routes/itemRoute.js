@@ -236,7 +236,7 @@ router.post("/newItem", uploadMultiImages, itemController.createItem);
  *                 details:
  *                   type: string
  */
-router.post("/updateItem", uploadMultiImages, itemController.createItem);
+router.put("/updateItem", uploadMultiImages, itemController.updateItem);
 
 /**
  * @swagger
