@@ -1,5 +1,5 @@
-import followController from '../controllers/followController.js';
-import express from 'express';
+import followController from "../controllers/followController.js";
+import express from "express";
 const router = express.Router();
 
 /**
@@ -28,30 +28,11 @@ const router = express.Router();
  *                   type: array
  *                   items:
  *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         example: "6827c3d6b2683121282808d1"
- *                       idfollower:
- *                         type: string
- *                         example: "681fdfed8ff84f652a0dfb01"
- *                       idfollowed:
- *                         type: string
- *                         example: "681fdfed8ff84f652a0dfb02"
+ *
  *                 following:
  *                   type: array
  *                   items:
  *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         example: "6827c3d6b2683121282808d2"
- *                       idfollower:
- *                         type: string
- *                         example: "681fdfed8ff84f652a0dfb01"
- *                       idfollowed:
- *                         type: string
- *                         example: "681fdfed8ff84f652a0dfb03"
  *       400:
  *         description: ID do usuário não fornecido
  *       500:
@@ -65,7 +46,10 @@ const router = express.Router();
  *                   type: string
  *                   example: Erro ao buscar seguidores e seguidos
  */
-router.get('follow/status/:id', followController.getFollowerAndFollowingByUserId);
+router.get(
+  "/follow/status/:id",
+  followController.getFollowerAndFollowingByUserId
+);
 
 /**
  * @swagger
@@ -81,13 +65,13 @@ router.get('follow/status/:id', followController.getFollowerAndFollowingByUserId
  *           schema:
  *             type: object
  *             required:
- *               - follower
- *               - following
+ *               - idfollower
+ *               - idfollowed
  *             properties:
- *               follower:
+ *               idfollower:
  *                 type: string
  *                 example: "681fdfed8ff84f652a0dfb01"
- *               following:
+ *               idfollowed:
  *                 type: string
  *                 example: "681fdfed8ff84f652a0dfb02"
  *     responses:
@@ -114,7 +98,7 @@ router.get('follow/status/:id', followController.getFollowerAndFollowingByUserId
  *                   type: string
  *                   example: Erro ao adicionar seguidor
  */
-router.post('/follow/new', followController.newFollow);
+router.post("/follow/new", followController.newFollow);
 
 /**
  * @swagger
@@ -130,13 +114,13 @@ router.post('/follow/new', followController.newFollow);
  *           schema:
  *             type: object
  *             required:
- *               - follower
- *               - following
+ *               - idfollower
+ *               - idfollowed
  *             properties:
- *               follower:
+ *               idfollower:
  *                 type: string
  *                 example: "681fdfed8ff84f652a0dfb01"
- *               following:
+ *               idfollowed:
  *                 type: string
  *                 example: "681fdfed8ff84f652a0dfb02"
  *     responses:
@@ -171,6 +155,6 @@ router.post('/follow/new', followController.newFollow);
  *                   type: string
  *                   example: Erro ao remover seguidor
  */
-router.delete('/follow/delete', followController.deleteFollow);
+router.delete("/follow/delete", followController.deleteFollow);
 
 export default router;

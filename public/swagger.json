@@ -412,41 +412,13 @@
                     "followers": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "_id": {
-                            "type": "string",
-                            "example": "6827c3d6b2683121282808d1"
-                          },
-                          "idfollower": {
-                            "type": "string",
-                            "example": "681fdfed8ff84f652a0dfb01"
-                          },
-                          "idfollowed": {
-                            "type": "string",
-                            "example": "681fdfed8ff84f652a0dfb02"
-                          }
-                        }
+                        "type": "object"
                       }
                     },
                     "following": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "_id": {
-                            "type": "string",
-                            "example": "6827c3d6b2683121282808d2"
-                          },
-                          "idfollower": {
-                            "type": "string",
-                            "example": "681fdfed8ff84f652a0dfb01"
-                          },
-                          "idfollowed": {
-                            "type": "string",
-                            "example": "681fdfed8ff84f652a0dfb03"
-                          }
-                        }
+                        "type": "object"
                       }
                     }
                   }
@@ -489,15 +461,15 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "follower",
-                  "following"
+                  "idfollower",
+                  "idfollowed"
                 ],
                 "properties": {
-                  "follower": {
+                  "idfollower": {
                     "type": "string",
                     "example": "681fdfed8ff84f652a0dfb01"
                   },
-                  "following": {
+                  "idfollowed": {
                     "type": "string",
                     "example": "681fdfed8ff84f652a0dfb02"
                   }
@@ -558,15 +530,15 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "follower",
-                  "following"
+                  "idfollower",
+                  "idfollowed"
                 ],
                 "properties": {
-                  "follower": {
+                  "idfollower": {
                     "type": "string",
                     "example": "681fdfed8ff84f652a0dfb01"
                   },
-                  "following": {
+                  "idfollowed": {
                     "type": "string",
                     "example": "681fdfed8ff84f652a0dfb02"
                   }
