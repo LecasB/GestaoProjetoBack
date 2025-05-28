@@ -158,55 +158,50 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "_id": {
-                            "type": "string",
-                            "example": "6827c3d6b2683121282808d1"
-                          },
-                          "idseller": {
-                            "type": "string",
-                            "example": "681fdfed8ff84f652a0dfb01"
-                          },
-                          "title": {
-                            "type": "string",
-                            "example": "Smartphone Samsung Galaxy S24"
-                          },
-                          "description": {
-                            "type": "string",
-                            "example": "Telemóvel usado em ótimo estado"
-                          },
-                          "price": {
-                            "type": "number",
-                            "format": "float",
-                            "example": 199.99
-                          },
-                          "images": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "format": "uri",
-                              "example": "https://images.samsung.com/is/image/samsung/p6pim/pt/sm-a566bliceub/gallery/pt-galaxy-a56-5g-sm-a566-sm-a566bliceub-thumb-545305043?$UX_EXT2_PNG$"
-                            }
-                          },
-                          "condition": {
-                            "type": "string",
-                            "example": "used"
-                          },
-                          "visibility": {
-                            "type": "string",
-                            "example": "onsale"
-                          },
-                          "__v": {
-                            "type": "integer",
-                            "example": 0
-                          }
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "6827c3d6b2683121282808d1"
+                      },
+                      "idseller": {
+                        "type": "string",
+                        "example": "681fdfed8ff84f652a0dfb01"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Smartphone Samsung Galaxy S24"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "Telemóvel usado em ótimo estado"
+                      },
+                      "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 199.99
+                      },
+                      "images": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://images.samsung.com/is/image/samsung/p6pim/pt/sm-a566bliceub/gallery/pt-galaxy-a56-5g-sm-a566-sm-a566bliceub-thumb-545305043?$UX_EXT2_PNG$"
                         }
+                      },
+                      "condition": {
+                        "type": "string",
+                        "example": "used"
+                      },
+                      "visibility": {
+                        "type": "string",
+                        "example": "onsale"
+                      },
+                      "__v": {
+                        "type": "integer",
+                        "example": 0
                       }
                     }
                   }
@@ -380,6 +375,249 @@
                   "properties": {
                     "error": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/follow/status/{id}": {
+      "get": {
+        "summary": "Retorna seguidores e seguidos por um usuário",
+        "tags": [
+          "Seguidores"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de seguidores e seguidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "followers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "6827c3d6b2683121282808d1"
+                          },
+                          "idfollower": {
+                            "type": "string",
+                            "example": "681fdfed8ff84f652a0dfb01"
+                          },
+                          "idfollowed": {
+                            "type": "string",
+                            "example": "681fdfed8ff84f652a0dfb02"
+                          }
+                        }
+                      }
+                    },
+                    "following": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "6827c3d6b2683121282808d2"
+                          },
+                          "idfollower": {
+                            "type": "string",
+                            "example": "681fdfed8ff84f652a0dfb01"
+                          },
+                          "idfollowed": {
+                            "type": "string",
+                            "example": "681fdfed8ff84f652a0dfb03"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID do usuário não fornecido"
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Erro ao buscar seguidores e seguidos"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/follow/new": {
+      "post": {
+        "summary": "Adiciona um novo seguidor",
+        "tags": [
+          "Seguidores"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "follower",
+                  "following"
+                ],
+                "properties": {
+                  "follower": {
+                    "type": "string",
+                    "example": "681fdfed8ff84f652a0dfb01"
+                  },
+                  "following": {
+                    "type": "string",
+                    "example": "681fdfed8ff84f652a0dfb02"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Seguidor adicionado com sucesso"
+          },
+          "400": {
+            "description": "Campos não preenchidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Campos não preenchidos"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Erro ao adicionar seguidor"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/follow/delete": {
+      "delete": {
+        "summary": "Remove um seguidor",
+        "tags": [
+          "Seguidores"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "follower",
+                  "following"
+                ],
+                "properties": {
+                  "follower": {
+                    "type": "string",
+                    "example": "681fdfed8ff84f652a0dfb01"
+                  },
+                  "following": {
+                    "type": "string",
+                    "example": "681fdfed8ff84f652a0dfb02"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seguidor removido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Seguidor removido com sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos não preenchidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Campos não preenchidos"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Erro ao remover seguidor"
                     }
                   }
                 }
