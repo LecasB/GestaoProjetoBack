@@ -845,6 +845,236 @@
         }
       }
     },
+    "/api/v1/leilao": {
+      "post": {
+        "summary": "Cria um novo leilão",
+        "description": "Cria um leilão com descrição, preço, imagens, estado e datas de início/fim. As imagens são enviadas por multipart/form-data e armazenadas no Azure Blob Storage.",
+        "tags": [
+          "Leilao"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "descricao",
+                  "preco",
+                  "idVendedor",
+                  "idUser",
+                  "estado",
+                  "dataInicio",
+                  "dataFim",
+                  "images"
+                ],
+                "properties": {
+                  "descricao": {
+                    "type": "string"
+                  },
+                  "preco": {
+                    "type": "number"
+                  },
+                  "idVendedor": {
+                    "type": "string",
+                    "format": "objectId"
+                  },
+                  "idUser": {
+                    "type": "string",
+                    "format": "objectId"
+                  },
+                  "estado": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "close"
+                    ]
+                  },
+                  "dataInicio": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "dataFim": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "Até 3 imagens podem ser enviadas"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Leilão criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leilao"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação ou dados faltando"
+          },
+          "500": {
+            "description": "Erro interno no servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todos os leilões",
+        "tags": [
+          "Leilao"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de leilões retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leilao"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno no servidor"
+          }
+        }
+      }
+    },
+    "/api/v1/leilao/{id}": {
+      "put": {
+        "summary": "Atualiza o preço e o utilizador atual do leilão (novo lance)",
+        "tags": [
+          "Leilao"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do leilão a ser atualizado",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "idUser",
+                  "preco"
+                ],
+                "properties": {
+                  "idUser": {
+                    "type": "string",
+                    "description": "ID do novo utilizador que fez a oferta"
+                  },
+                  "preco": {
+                    "type": "number",
+                    "description": "Novo valor da oferta"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Leilão atualizado com sucesso"
+          },
+          "400": {
+            "description": "Campos obrigatórios em falta"
+          },
+          "404": {
+            "description": "Leilão não encontrado"
+          },
+          "500": {
+            "description": "Erro interno no servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um leilão pelo ID",
+        "tags": [
+          "Leilao"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do leilão a ser deletado",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leilão deletado com sucesso"
+          },
+          "404": {
+            "description": "Leilão não encontrado"
+          },
+          "500": {
+            "description": "Erro interno no servidor"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna um leilão pelo ID",
+        "tags": [
+          "Leilao"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID do leilão a ser retornado",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leilão retornado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leilao"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Leilão não encontrado"
+          },
+          "500": {
+            "description": "Erro interno no servidor"
+          }
+        }
+      }
+    },
     "/api/v1/newMessage": {
       "post": {
         "tags": [
