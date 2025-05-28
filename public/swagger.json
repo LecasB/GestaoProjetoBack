@@ -1125,11 +1125,7 @@
           "201": {
             "description": "Leilão criado com sucesso",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Leilao"
-                }
-              }
+              "application/json": null
             }
           },
           "400": {
@@ -1151,10 +1147,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Leilao"
-                  }
+                  "type": "array"
                 }
               }
             }
@@ -1269,11 +1262,7 @@
           "200": {
             "description": "Leilão retornado com sucesso",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Leilao"
-                }
-              }
+              "application/json": null
             }
           },
           "404": {

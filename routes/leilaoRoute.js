@@ -58,8 +58,6 @@ const router = express.Router();
  *         description: Leilão criado com sucesso
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Leilao'
  *       400:
  *         description: Erro de validação ou dados faltando
  *       500:
@@ -131,7 +129,7 @@ router.put("/leilao/:id", leilaoController.updateLeilaoBid);
  *       500:
  *         description: Erro interno no servidor
  */
-router.delete("leilao/:id", leilaoController.deleteLeilao);
+router.delete("/leilao/:id", leilaoController.deleteLeilao);
 
 /**
  * @swagger
@@ -147,8 +145,6 @@ router.delete("leilao/:id", leilaoController.deleteLeilao);
  *           application/json:
  *             schema:
  *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Leilao'
  *       500:
  *         description: Erro interno no servidor
  */
@@ -173,8 +169,6 @@ router.get("/leilao", leilaoController.getAllLeiloes);
  *         description: Leilão retornado com sucesso
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Leilao'
  *       404:
  *         description: Leilão não encontrado
  *       500:
