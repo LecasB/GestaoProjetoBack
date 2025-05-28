@@ -2,6 +2,7 @@ import Follow from "../models/Follow.js";
 
 const getFollowerAndFollowingByUserId = async (req, res) => {
   try {
+<<<<<<< HEAD
     const { id } = req.params;
 
     if (!id) {
@@ -14,6 +15,22 @@ const getFollowerAndFollowingByUserId = async (req, res) => {
 
     const followers = followersDocs.map((f) => f.idfollower);
     const following = followingDocs.map((f) => f.idfollowed);
+=======
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ error: "ID do usuário não fornecido" });
+    }
+
+    const followers = await Follow.find({ following: userId }).populate(
+      "follower",
+      "name email"
+    );
+    const following = await Follow.find({ follower: userId }).populate(
+      "following",
+      "name email"
+    );
+>>>>>>> 5c94a12e5b98fe535688c99671a1f6018b60e842
 
     return res.status(200).json({ followers, following });
   } catch (error) {
