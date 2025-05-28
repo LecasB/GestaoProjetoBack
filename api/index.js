@@ -12,6 +12,7 @@ import newsRoute from "../routes/newsRoute.js";
 import favoriteRouter from "../routes/favoriteRoute.js";
 import acaoSocialRoute from "../routes/acaoSocialRoute.js";
 import reviewRouter from "../routes/reviewRoute.js";
+import followRouter from "../routes/followRoute.js"; 
 import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io"; // Ensure Socket.IO is imported correctly
 
@@ -83,6 +84,7 @@ app.use("/api/v1", newsRoute);
 app.use("/api/v1", favoriteRouter);
 app.use("/api/v1", acaoSocialRoute);
 app.use("/api/v1", reviewRouter);
+app.use("/api/v1", followRouter)
 
 // Listen on the HTTP server
 server.listen(PORT, () => {
