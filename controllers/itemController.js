@@ -227,6 +227,7 @@ export const deleteItem = async (req, res) => {
 };
 
 export default {
+  updateItem,
   getItems,
   createItem,
   deleteItem,

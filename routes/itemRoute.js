@@ -163,7 +163,7 @@ router.post("/newItem", uploadMultiImages, itemController.createItem);
 
 /**
  * @swagger
- * /apiv1//updateItem:
+ * /api/v1/updateItem:
  *   put:
  *     summary: Atualiza um item existente
  *     description: Atualiza os campos de um item com base nos dados fornecidos. Apenas os campos enviados e não vazios serão atualizados. Caso imagens sejam fornecidas, elas substituirão as antigas (máximo de 3 imagens).
@@ -236,7 +236,7 @@ router.post("/newItem", uploadMultiImages, itemController.createItem);
  *                 details:
  *                   type: string
  */
-router.post("/updateItem", uploadMultiImages, itemController.createItem);
+router.put("/updateItem", uploadMultiImages, itemController.updateItem);
 
 /**
  * @swagger
