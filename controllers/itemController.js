@@ -139,6 +139,80 @@ export const createItem = async (req, res) => {
   }
 };
 
+export const updateItem = async (req, res) => {
+  try {
+    const { id, title, description, price, condition } = req.body;
+
+    const item = await Item.findById(id);
+    if (!item) {
+      return res.status(404).json({ error: "Item não encontrado." });
+    }
+
+    const updates = {};
+
+    if (title && title.trim() !== "") updates.title = title;
+    if (description && description.trim() !== "")
+      updates.description = description;
+    if (price !== undefined && price !== "") updates.price = price;
+    if (condition && condition.trim() !== "") updates.condition = condition;
+
+    // Atualizar imagens se houver novas
+    if (req.files && req.files.length > 0) {
+      if (req.files.length > 3) {
+        return res
+          .status(400)
+          .json({ error: "Máximo de 3 imagens permitido." });
+      }
+
+      const blobServiceClient = BlobServiceClient.fromConnectionString(
+        process.env.AZURE_STORAGE_CONNECTION_STRING
+      );
+      const containerName = "items";
+      const containerClient =
+        blobServiceClient.getContainerClient(containerName);
+
+      // Apaga imagens antigas (baseado nas URLs existentes)
+      for (const oldUrl of item.images) {
+        const blobName = oldUrl.split("/").pop();
+        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+        await blockBlobClient.deleteIfExists();
+      }
+
+      const imageUrls = [];
+
+      for (const file of req.files) {
+        const timestamp = Date.now();
+        const uniqueFileName = `${item.idseller}-${timestamp}-${file.originalname}`;
+
+        const blockBlobClient =
+          containerClient.getBlockBlobClient(uniqueFileName);
+
+        await blockBlobClient.uploadData(file.buffer, {
+          blobHTTPHeaders: { blobContentType: file.mimetype },
+          overwrite: true,
+        });
+
+        const url = `https://xuobucket.blob.core.windows.net/${containerName}/${uniqueFileName}`;
+        imageUrls.push(url);
+      }
+
+      updates.images = imageUrls;
+    }
+
+    // Atualiza o item
+    const updatedItem = await Item.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
+
+    return res.status(200).json(updatedItem);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "Erro ao atualizar o item.", details: err.message });
+  }
+};
+
 export const deleteItem = async (req, res) => {
   const { id } = req.params;
   try {
@@ -153,6 +227,7 @@ export const deleteItem = async (req, res) => {
 };
 
 export default {
+  updateItem,
   getItems,
   createItem,
   deleteItem,

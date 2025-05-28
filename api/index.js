@@ -13,11 +13,10 @@ import favoriteRouter from "../routes/favoriteRoute.js";
 import acaoSocialRoute from "../routes/acaoSocialRoute.js";
 import reviewRouter from "../routes/reviewRoute.js";
 import followRouter from "../routes/followRoute.js";
-
+import buyRoute from "../routes/buyRoute.js";
 import leilaoRoute from "../routes/leilaoRoute.js";
 import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io"; // Ensure Socket.IO is imported correctly
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -87,7 +86,7 @@ app.use("/api/v1", favoriteRouter);
 app.use("/api/v1", acaoSocialRoute);
 app.use("/api/v1", reviewRouter);
 app.use("/api/v1", followRouter);
-
+app.use("/api/v1", buyRoute);
 app.use("/api/v1", leilaoRoute);
 
 // Listen on the HTTP server
