@@ -163,6 +163,83 @@ router.post("/newItem", uploadMultiImages, itemController.createItem);
 
 /**
  * @swagger
+ * /apiv1//updateItem:
+ *   put:
+ *     summary: Atualiza um item existente
+ *     description: Atualiza os campos de um item com base nos dados fornecidos. Apenas os campos enviados e não vazios serão atualizados. Caso imagens sejam fornecidas, elas substituirão as antigas (máximo de 3 imagens).
+ *     tags:
+ *       - Items
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: ID do item a ser atualizado
+ *                 example: 6655bbf8d7e3bdf1fa67a123
+ *               title:
+ *                 type: string
+ *                 description: Novo título do item
+ *               description:
+ *                 type: string
+ *                 description: Nova descrição do item
+ *               price:
+ *                 type: number
+ *                 description: Novo preço do item
+ *               condition:
+ *                 type: string
+ *                 description: Nova condição do item
+ *                 enum: [new, used, refurbished, broken]
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: Até 3 novas imagens para substituir as atuais
+ *     responses:
+ *       200:
+ *         description: Item atualizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Item'
+ *       400:
+ *         description: Erro de validação ou envio de mais de 3 imagens
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       404:
+ *         description: Item não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 details:
+ *                   type: string
+ */
+router.post("/updateItem", uploadMultiImages, itemController.createItem);
+
+/**
+ * @swagger
  * /api/v1/items/{id}:
  *   delete:
  *     summary: Eliminar item por ID
