@@ -213,6 +213,20 @@ export const updateItem = async (req, res) => {
   }
 };
 
+export const getSoldItemsByUser = async (req,res) => {
+  const { id } = req.params;
+  try {
+    const items = await Item.find({ idseller: id, visibility: "sold" });
+    if (!items) {
+      return res.status(404).json({ error: "Nenhum item encontrado." });
+    }
+    res.status(200).json(items);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao buscar os itens." });
+  }
+
+}
+
 export const deleteItem = async (req, res) => {
   const { id } = req.params;
   try {
@@ -233,4 +247,5 @@ export default {
   deleteItem,
   getItemsByUserId,
   getItemById,
+  getSoldItemsByUser
 };

@@ -262,4 +262,6 @@ router.put("/updateItem", uploadMultiImages, itemController.updateItem);
  */
 router.delete("/items/:id", itemController.deleteItem);
 
+router.get("/items/sold/:id", itemController.getSoldItemsByUser);
+
 export default router;
