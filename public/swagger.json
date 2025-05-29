@@ -1281,44 +1281,10 @@
           }
         }
       },
-      "get": {
-        "summary": "Retorna todos os leilões",
-        "tags": [
-          "Leilao"
-        ],
-        "responses": {
-          "200": {
-            "description": "Lista de leilões retornada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Erro interno no servidor"
-          }
-        }
-      }
-    },
-    "/api/v1/leilao/{id}": {
       "put": {
         "summary": "Atualiza o preço e o utilizador atual do leilão (novo lance)",
         "tags": [
           "Leilao"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "ID do leilão a ser atualizado",
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "requestBody": {
           "required": true,
@@ -1359,6 +1325,29 @@
           }
         }
       },
+      "get": {
+        "summary": "Retorna todos os leilões",
+        "tags": [
+          "Leilao"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de leilões retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno no servidor"
+          }
+        }
+      }
+    },
+    "/api/v1/leilao/{id}": {
       "delete": {
         "summary": "Deleta um leilão pelo ID",
         "tags": [

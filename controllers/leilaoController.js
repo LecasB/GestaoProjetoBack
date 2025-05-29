@@ -120,7 +120,6 @@ const getLeilaoById = async (req, res) => {
 
 const updateLeilaoBid = async (req, res) => {
   try {
-    const { id } = req.params; // ID do leilão
     const { idUser, preco } = req.body;
 
     if (!idUser || preco === undefined) {

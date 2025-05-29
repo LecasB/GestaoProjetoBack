@@ -67,18 +67,11 @@ router.post("/leilao", uploadMultiImages, leilaoController.createLeilao);
 
 /**
  * @swagger
- * /api/v1/leilao/{id}:
+ * /api/v1/leilao:
  *   put:
  *     summary: Atualiza o preço e o utilizador atual do leilão (novo lance)
  *     tags:
  *       - Leilao
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID do leilão a ser atualizado
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -105,7 +98,7 @@ router.post("/leilao", uploadMultiImages, leilaoController.createLeilao);
  *       500:
  *         description: Erro interno no servidor
  */
-router.put("/leilao/:id", leilaoController.updateLeilaoBid);
+router.put("/leilao", leilaoController.updateLeilaoBid);
 
 /**
  * @swagger
