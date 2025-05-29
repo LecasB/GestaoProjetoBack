@@ -54,7 +54,28 @@ const deleteFollow = async (req, res) => {
   }
 };
 
+const verifyFollow = async (req, res) => {
+  try {
+    const { idfollower, idfollowed } = req.body;
+
+    if (!idfollower || !idfollowed) {
+      return res.status(400).json({ error: "Campos não preenchidos" });
+    }
+
+    const follow = await Follow.findOne({ idfollower, idfollowed });
+
+    if (follow) {
+      return res.status(200).json({ isFollowing: true });
+    } else {
+      return res.status(200).json({ isFollowing: false });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
+  verifyFollow,
   getFollowerAndFollowingByUserId,
   newFollow,
   deleteFollow,

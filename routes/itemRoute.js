@@ -262,6 +262,48 @@ router.put("/updateItem", uploadMultiImages, itemController.updateItem);
  */
 router.delete("/items/:id", itemController.deleteItem);
 
+/**
+ * @swagger
+ * /items/sold/{id}:
+ *   get:
+ *     summary: Obtém os itens marcados como vendidos de um utilizador.
+ *     tags:
+ *       - Items
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do utilizador (vendedor).
+ *     responses:
+ *       200:
+ *         description: Lista de itens vendidos com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       404:
+ *         description: Nenhum item encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Nenhum item encontrado.
+ *       500:
+ *         description: Erro ao buscar os itens.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao buscar os itens.
+ */
 router.get("/items/sold/:id", itemController.getSoldItemsByUser);
 
 export default router;

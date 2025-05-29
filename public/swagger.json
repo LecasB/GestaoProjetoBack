@@ -693,6 +693,88 @@
         }
       }
     },
+    "/api/v1/follow/verify": {
+      "post": {
+        "summary": "Verifica se um utilizador está a seguir outro.",
+        "tags": [
+          "Seguidores"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "idfollower",
+                  "idfollowed"
+                ],
+                "properties": {
+                  "idfollower": {
+                    "type": "string",
+                    "description": "ID do utilizador que está a seguir."
+                  },
+                  "idfollowed": {
+                    "type": "string",
+                    "description": "ID do utilizador que está a ser seguido."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado da verificação do seguimento.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isFollowing": {
+                      "type": "boolean",
+                      "description": "Indica se o utilizador está a seguir o outro."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos não preenchidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Campos não preenchidos"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Erro ao verificar seguimento"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/items/user/{id}": {
       "get": {
         "summary": "Buscar itens por ID do vendedor (user)",
@@ -1046,6 +1128,69 @@
                     },
                     "details": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items/sold/{id}": {
+      "get": {
+        "summary": "Obtém os itens marcados como vendidos de um utilizador.",
+        "tags": [
+          "Items"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do utilizador (vendedor)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de itens vendidos com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum item encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Nenhum item encontrado."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao buscar os itens.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Erro ao buscar os itens."
                     }
                   }
                 }

@@ -157,4 +157,61 @@ router.post("/follow/new", followController.newFollow);
  */
 router.delete("/follow/delete", followController.deleteFollow);
 
+/**
+ * @swagger
+ * /api/v1/follow/verify:
+ *   post:
+ *     summary: Verifica se um utilizador está a seguir outro.
+ *     tags:
+ *       - Seguidores
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idfollower
+ *               - idfollowed
+ *             properties:
+ *               idfollower:
+ *                 type: string
+ *                 description: ID do utilizador que está a seguir.
+ *               idfollowed:
+ *                 type: string
+ *                 description: ID do utilizador que está a ser seguido.
+ *     responses:
+ *       200:
+ *         description: Resultado da verificação do seguimento.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 isFollowing:
+ *                   type: boolean
+ *                   description: Indica se o utilizador está a seguir o outro.
+ *       400:
+ *         description: Campos não preenchidos.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Campos não preenchidos
+ *       500:
+ *         description: Erro interno do servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erro ao verificar seguimento
+ */
+router.post("/follow/verify", followController.verifyFollow);
+
 export default router;
